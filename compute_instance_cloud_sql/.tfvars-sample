@@ -1,0 +1,20 @@
+compute_instances = {
+  "micro" : {
+    instance_name = "micro"
+    machine_type  = "e2-micro" # free tier suitable
+    disk_size_gb  = "20"
+    zone = "us-east1-c"
+  }
+}
+
+cloud_sql_instances = {
+  "pg15" : {
+    name                     = "instance"
+    database_version         = "POSTGRES_15"
+    region                   = "us-central1"
+    tier                     = "db-f1-micro"
+    high_available           = true
+    enforce_complex_password = true
+    enable_private_network = true
+  }
+}
