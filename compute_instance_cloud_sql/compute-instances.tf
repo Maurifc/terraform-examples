@@ -27,7 +27,8 @@ resource "google_compute_instance" "this" {
   }
 
   network_interface {
-    network = "default"
+    network = google_compute_network.vpc.self_link
+    subnetwork = google_compute_network.vpc.name
 
     access_config {
       nat_ip = google_compute_address.public_static_ips[each.value.instance_name].address
