@@ -16,7 +16,7 @@ terraform {
 }
 
 provider "google" {
-  project = "alucard-419418"
-  region  = "us-east1"
-  zone    = "us-east1-c"
+  project = var.project
+  region  = var.region
+  zone    = var.zone
 }
