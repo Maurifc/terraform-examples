@@ -26,6 +26,8 @@ resource "google_compute_instance" "this" {
     }
   }
 
+  tags = each.value.network_tags
+
   network_interface {
     network = google_compute_network.vpc.self_link
     subnetwork = google_compute_network.vpc.name
@@ -35,7 +37,7 @@ resource "google_compute_instance" "this" {
     }
   }
 
-  metadata_startup_script = "apt update && apt upgrade && apt install -y nginx"
+  metadata_startup_script = each.value.startup_script
 
   service_account {
     email  = google_service_account.instance_service_accounts[each.value.instance_name].email

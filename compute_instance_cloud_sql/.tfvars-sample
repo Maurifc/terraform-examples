@@ -1,9 +1,15 @@
 compute_instances = {
-  "micro" : {
-    instance_name = "micro"
+  "gitlab" : {
+    instance_name = "gitlab-vm"
     machine_type  = "e2-micro" # free tier suitable
     disk_size_gb  = "20"
     zone = "us-east1-c"
+    network_tags = ["gitlab"]
+    startup_script = "apt update && apt install -y nginx"
+    firewall_allow_tcp_ports = [
+      "80",
+      "443"
+    ]
   }
 }
 
@@ -13,8 +19,8 @@ cloud_sql_instances = {
     database_version         = "POSTGRES_15"
     region                   = "us-central1"
     tier                     = "db-f1-micro"
-    high_available           = true
+    high_available           = false
     enforce_complex_password = true
-    enable_private_network = true
+    enable_private_network = false
   }
 }
