@@ -12,8 +12,6 @@ resource "google_sql_database_instance" "this" {
   settings {
     tier = each.value.tier
 
-    # TODO: create sample database and users
-    # TODO: Authorize traffic from vpc
     ip_configuration {
       dynamic "authorized_networks" {
         for_each = google_compute_address.public_static_ips
@@ -61,6 +59,7 @@ resource "google_sql_database_instance" "this" {
 #----------------------------------------------------------------------------
 
 resource "google_compute_global_address" "cloudsql_peering_ip" {
+  count = length(google_sql_database_instance.this) > 0 ? 1 : 0
   name          = "cloudsql-peering-ip"
   purpose       = "VPC_PEERING"
   address_type  = "INTERNAL"
@@ -69,7 +68,9 @@ resource "google_compute_global_address" "cloudsql_peering_ip" {
 }
 
 resource "google_service_networking_connection" "private_vpc_connection" {
+  count = length(google_sql_database_instance.this) > 0 ? 1 : 0
+
   network                 = google_compute_network.vpc.id
   service                 = "servicenetworking.googleapis.com"
-  reserved_peering_ranges = [google_compute_global_address.cloudsql_peering_ip.name]
+  reserved_peering_ranges = [google_compute_global_address.cloudsql_peering_ip[0].name]
 }
