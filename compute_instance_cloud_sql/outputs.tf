@@ -7,6 +7,7 @@ output "compute_engine_instances" {
     instance.name => {
       public_ip  = instance.network_interface.0.access_config.0.nat_ip
       private_ip = instance.network_interface.0.network_ip
+      ssh_connect = "gcloud compute ssh --zone ${instance.zone} ${instance.name} --project ${var.project}"
     }
   }
 }
@@ -21,7 +22,6 @@ output "cloud_sql_instances" {
       public_ip_address      = instance.public_ip_address
       private_ip_address     = instance.private_ip_address
       connection_name = instance.connection_name
-
     }
   }
 }

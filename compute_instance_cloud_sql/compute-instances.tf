@@ -63,3 +63,35 @@ resource "google_compute_address" "public_static_ips" {
   for_each = local.compute_instances_name
   name     = each.key
 }
+
+
+#----------------------------------------------------------------------------
+# FIREWALL
+#----------------------------------------------------------------------------
+
+# Allow SSH access through IAP to instances in the main VPC
+resource "google_compute_firewall" "allow_iap_ssh" {
+  name    = "allow-iap-ssh"
+  network = google_compute_network.vpc.self_link
+
+  allow {
+    protocol = "tcp"
+    ports    = ["22"]
+  }
+
+  source_ranges              = ["35.235.240.0/20"]
+}
+
+resource "google_compute_firewall" "allow_tcp_ports" {
+  for_each = var.compute_instances
+
+  name    = "allow-tcp-ports-${each.value.instance_name}"
+  network = google_compute_network.vpc.self_link
+
+  allow {
+    protocol = "tcp"
+    ports    = each.value.firewall_allow_tcp_ports
+  }
+
+  source_ranges              = ["0.0.0.0/0"]
+}
