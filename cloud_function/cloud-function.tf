@@ -1,12 +1,4 @@
 #----------------------------------------------------------------------------
-# LOCALS
-#----------------------------------------------------------------------------
-locals {
-    bucket_name_suffix = random_id.bucket_random_prefix.hex
-}
-
-
-#----------------------------------------------------------------------------
 # SOURCE CODE .ZIP
 #----------------------------------------------------------------------------
 data "archive_file" "source_zip" {
@@ -37,18 +29,29 @@ resource "google_storage_bucket_object" "source_code" {
 
 
 #----------------------------------------------------------------------------
-# Cloud Function
+# CLOUD FUNCTION
 #----------------------------------------------------------------------------
 resource "google_cloudfunctions_function" "function" {
-  name        = "function-test"
+  name        = var.function_name
   description = "Demo function"
   runtime     = "python312"
 
   available_memory_mb   = 128
   source_archive_bucket = google_storage_bucket.functions_source_code_bucket.name
   source_archive_object = google_storage_bucket_object.source_code.name
-  trigger_http          = true
   entry_point           = "main"
+
+  # event trigger = GCS Bucket
+  event_trigger {
+    event_type = "google.storage.object.finalize"
+    resource   = google_storage_bucket.function_demo.name
+  }
+
+  environment_variables = {
+    "source-md5": "${google_storage_bucket_object.source_code.md5hash}"    
+  }
+
+  service_account_email = google_service_account.cloud_function_sa.email
 }
 
 
