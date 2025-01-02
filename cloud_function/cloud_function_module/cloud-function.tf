@@ -3,7 +3,7 @@
 #----------------------------------------------------------------------------
 data "archive_file" "source_zip" {
   type        = "zip"
-  source_dir = "${path.module}/source-code/"
+  source_dir = var.source_dir
   output_path = "/tmp/function-source-code.zip"
 
   excludes = [
@@ -33,7 +33,7 @@ resource "google_storage_bucket_object" "source_code" {
 #----------------------------------------------------------------------------
 resource "google_cloudfunctions_function" "function" {
   name        = var.function_name
-  description = "Demo function"
+  description = var.function_description
   runtime     = "python312"
 
   available_memory_mb   = 128

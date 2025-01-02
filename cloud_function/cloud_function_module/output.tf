@@ -4,19 +4,19 @@
 
 output "source_code_bucket" {
   description = "The source code bucket for the functions"
-  value = module.demo_function.source_code_bucket
+  value = google_storage_bucket.functions_source_code_bucket.name
 }
 
 output "event_bucket"{
   description = "The event bucket for the function"
-  value = module.demo_function.event_bucket
+  value = google_storage_bucket.function_demo.name
 }
 
 output "cloud_function" {
   value = {
-    "name" = module.demo_function.cloud_function.name
-    "region" = module.demo_function.cloud_function.region
-    "runtime" = module.demo_function.cloud_function.runtime
-    "entry_point" = module.demo_function.cloud_function.entry_point
+    "name" = google_cloudfunctions_function.function.name
+    "region" = google_cloudfunctions_function.function.region
+    "runtime" = google_cloudfunctions_function.function.runtime
+    "entry_point" = google_cloudfunctions_function.function.entry_point
   }
 }
