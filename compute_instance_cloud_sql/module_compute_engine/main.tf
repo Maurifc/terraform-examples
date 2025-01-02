@@ -1,46 +1,33 @@
 #----------------------------------------------------------------------------
-# LOCALS
-#----------------------------------------------------------------------------
-locals {
-  compute_instances_name = toset(
-    [
-      for instance in var.compute_instances : instance.instance_name
-    ]
-  )
-}
-
-
-#----------------------------------------------------------------------------
 # COMPUTE INSTANCES
 #----------------------------------------------------------------------------
 resource "google_compute_instance" "this" {
-  for_each     = var.compute_instances
-  name         = each.value.instance_name
-  machine_type = each.value.machine_type
-  zone         = lookup(each.value, "zone", null) # Use default zone if not set
+  name         = var.instance_name
+  machine_type = var.machine_type
+  zone         = var.zone
 
   boot_disk {
     initialize_params {
       image = "ubuntu-os-cloud/ubuntu-2204-lts" # Tip: use the command 'gcloud compute images list' to obtain a list of available images
-      size  = each.value.disk_size_gb
+      size  = var.disk_size_gb
     }
   }
 
-  tags = each.value.network_tags
+  tags = var.network_tags
 
   network_interface {
     network = google_compute_network.vpc.self_link
     subnetwork = google_compute_network.vpc.name
 
     access_config {
-      nat_ip = google_compute_address.public_static_ips[each.value.instance_name].address
+      nat_ip = google_compute_address.public_static_ip.address
     }
   }
 
-  metadata_startup_script = each.value.startup_script
+  metadata_startup_script = var.startup_script
 
   service_account {
-    email  = google_service_account.instance_service_accounts[each.value.instance_name].email
+    email  = google_service_account.instance_service_account.email
     scopes = ["cloud-platform"]
   }
 }
@@ -49,19 +36,16 @@ resource "google_compute_instance" "this" {
 # INSTANCES SERVICE ACCOUNTS
 #----------------------------------------------------------------------------
 
-resource "google_service_account" "instance_service_accounts" {
-  for_each = local.compute_instances_name
-
-  account_id   = "${each.key}-sa"
-  display_name = "Service Account for ${each.key} compute instance"
+resource "google_service_account" "instance_service_account" {
+  account_id   = "${var.instance_name}-sa"
+  display_name = "Service Account for ${var.instance_name} compute instance"
 }
 
 #----------------------------------------------------------------------------
 # PUBLIC STATIC IPS
 #----------------------------------------------------------------------------
-resource "google_compute_address" "public_static_ips" {
-  for_each = local.compute_instances_name
-  name     = each.key
+resource "google_compute_address" "public_static_ip" {
+  name     = var.instance_name
 }
 
 
@@ -83,14 +67,12 @@ resource "google_compute_firewall" "allow_iap_ssh" {
 }
 
 resource "google_compute_firewall" "allow_tcp_ports" {
-  for_each = var.compute_instances
-
-  name    = "allow-tcp-ports-${each.value.instance_name}"
+  name    = "allow-tcp-ports-${var.instance_name}"
   network = google_compute_network.vpc.self_link
 
   allow {
     protocol = "tcp"
-    ports    = each.value.firewall_allow_tcp_ports
+    ports    = var.firewall_allow_tcp_ports
   }
 
   source_ranges              = ["0.0.0.0/0"]

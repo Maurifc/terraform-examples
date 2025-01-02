@@ -3,6 +3,6 @@
 #----------------------------------------------------------------------------
 
 resource "google_compute_network" "vpc" {
-  name                    = "my-custom-vpc"
+  name                    = var.vpc_name
   auto_create_subnetworks = true
 }

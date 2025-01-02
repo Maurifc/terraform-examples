@@ -1,76 +1,22 @@
 #----------------------------------------------------------------------------
-# INSTANCES
+# MODULE CLOUD SQL
 #----------------------------------------------------------------------------
+module "cloud_sql" {
+  source = "./module_cloud_sql"
 
-# Create a Cloud SQL DB instance (Postgres 15)
-resource "google_sql_database_instance" "this" {
-  for_each         = var.cloud_sql_instances
-  name             = each.value.name
-  database_version = each.value.database_version
-  region           = lookup(each.value, "region", null)
+  instance_name            = var.cloud_sql_instance_name
+  database_version         = var.database_version
+  tier                     = var.tier
+  enable_private_network   = var.enable_private_network
+  enable_ha                = var.enable_ha
+  enforce_complex_password = var.enforce_complex_password
 
-  settings {
-    tier = each.value.tier
-
-    ip_configuration {
-      dynamic "authorized_networks" {
-        for_each = google_compute_address.public_static_ips
-        iterator = static_ip
-
-        content {
-          name  = static_ip.key
-          value = static_ip.value.address
-        }
-      }
-
-      # VPC Peering (private connectivity)
-      private_network                               = each.value.enable_private_network ? google_compute_network.vpc.self_link : null
-      enable_private_path_for_google_cloud_services = each.value.enable_private_network
-    }
-
-    availability_type = each.value.high_available ? "REGIONAL" : "ZONAL"
-
-    backup_configuration {
-      enabled                        = true
-      point_in_time_recovery_enabled = true
-    }
-
-    maintenance_window {
-      day          = 6
-      hour         = 2
-      update_track = "week5"
-    }
-
-    insights_config {
-      query_insights_enabled = true
-      record_client_address  = true
-    }
-
-    password_validation_policy {
-      min_length             = 16
-      complexity             = "COMPLEXITY_DEFAULT"
-      enable_password_policy = each.value.enforce_complex_password
-    }
+  authorized_networks = {
+    "all": "0.0.0.0/0"
   }
-}
+  vpc                 = module.compute_engine_instance.vpc
 
-#----------------------------------------------------------------------------
-# PEERING CLOUD SQL <-> VPC
-#----------------------------------------------------------------------------
-
-resource "google_compute_global_address" "cloudsql_peering_ip" {
-  count = length(google_sql_database_instance.this) > 0 ? 1 : 0
-  name          = "cloudsql-peering-ip"
-  purpose       = "VPC_PEERING"
-  address_type  = "INTERNAL"
-  prefix_length = 16
-  network       = google_compute_network.vpc.id
-}
-
-resource "google_service_networking_connection" "private_vpc_connection" {
-  count = length(google_sql_database_instance.this) > 0 ? 1 : 0
-
-  network                 = google_compute_network.vpc.id
-  service                 = "servicenetworking.googleapis.com"
-  reserved_peering_ranges = [google_compute_global_address.cloudsql_peering_ip[0].name]
+  project = var.project
+  region  = var.region
+  zone    = var.zone
 }
