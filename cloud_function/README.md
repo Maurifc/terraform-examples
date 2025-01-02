@@ -162,3 +162,44 @@ terraform destroy
 ## Learn More
 - [Terraform Documentation](https://www.terraform.io/docs)
 - [Google Cloud Provider for Terraform](https://registry.terraform.io/providers/hashicorp/google/latest/docs)
+
+
+<!-- BEGIN_TF_DOCS -->
+## Requirements
+
+| Name | Version |
+|------|---------|
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | 1.10.2 |
+| <a name="requirement_google"></a> [google](#requirement\_google) | 6.13.0 |
+
+## Providers
+
+No providers.
+
+## Modules
+
+| Name | Source | Version |
+|------|--------|---------|
+| <a name="module_demo_function"></a> [demo\_function](#module\_demo\_function) | ./cloud_function_module | n/a |
+
+## Resources
+
+No resources.
+
+## Inputs
+
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:--------:|
+| <a name="input_function_name"></a> [function\_name](#input\_function\_name) | A unique name for the function | `string` | `"demo-function"` | no |
+| <a name="input_project"></a> [project](#input\_project) | Default ProjectID | `any` | n/a | yes |
+| <a name="input_region"></a> [region](#input\_region) | Default region | `string` | `"us-east1"` | no |
+| <a name="input_zone"></a> [zone](#input\_zone) | Default zone | `string` | `"us-east1-c"` | no |
+
+## Outputs
+
+| Name | Description |
+|------|-------------|
+| <a name="output_cloud_function"></a> [cloud\_function](#output\_cloud\_function) | n/a |
+| <a name="output_event_bucket"></a> [event\_bucket](#output\_event\_bucket) | The event bucket for the function |
+| <a name="output_source_code_bucket"></a> [source\_code\_bucket](#output\_source\_code\_bucket) | The source code bucket for the functions |
+<!-- END_TF_DOCS -->

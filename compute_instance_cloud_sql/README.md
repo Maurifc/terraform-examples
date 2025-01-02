@@ -188,3 +188,67 @@ Ensure no critical data exists in the resources before destruction.
 - [Terraform Documentation](https://www.terraform.io/docs)
 - [Google Cloud Provider for Terraform](https://registry.terraform.io/providers/hashicorp/google/latest/docs)
 
+
+<!-- BEGIN_TF_DOCS -->
+## Requirements
+
+| Name | Version |
+|------|---------|
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | 1.10.2 |
+| <a name="requirement_google"></a> [google](#requirement\_google) | 6.13.0 |
+
+## Providers
+
+| Name | Version |
+|------|---------|
+| <a name="provider_google"></a> [google](#provider\_google) | 6.13.0 |
+
+## Modules
+
+| Name | Source | Version |
+|------|--------|---------|
+| <a name="module_cloud_sql"></a> [cloud\_sql](#module\_cloud\_sql) | ./module_cloud_sql | n/a |
+| <a name="module_compute_engine_instance"></a> [compute\_engine\_instance](#module\_compute\_engine\_instance) | ./module_compute_engine | n/a |
+
+## Resources
+
+| Name | Type |
+|------|------|
+| [google_project_service.apis](https://registry.terraform.io/providers/hashicorp/google/6.13.0/docs/resources/project_service) | resource |
+
+## Inputs
+
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:--------:|
+| <a name="input_cloud_sql_instance_name"></a> [cloud\_sql\_instance\_name](#input\_cloud\_sql\_instance\_name) | Name of the instance | `any` | n/a | yes |
+| <a name="input_database_version"></a> [database\_version](#input\_database\_version) | Database version | `any` | n/a | yes |
+| <a name="input_disk_size_gb"></a> [disk\_size\_gb](#input\_disk\_size\_gb) | Root disk size in GB | `any` | n/a | yes |
+| <a name="input_enable_apis"></a> [enable\_apis](#input\_enable\_apis) | APIs to enable on the project | `list` | <pre>[<br/>  "compute.googleapis.com",<br/>  "servicenetworking.googleapis.com"<br/>]</pre> | no |
+| <a name="input_enable_ha"></a> [enable\_ha](#input\_enable\_ha) | Enable high availability for the instance | `bool` | `false` | no |
+| <a name="input_enable_private_network"></a> [enable\_private\_network](#input\_enable\_private\_network) | Whether to enable private network or not | `bool` | `false` | no |
+| <a name="input_enforce_complex_password"></a> [enforce\_complex\_password](#input\_enforce\_complex\_password) | Whether to enforce the complexity of the password | `bool` | `false` | no |
+| <a name="input_firewall_allow_tcp_ports"></a> [firewall\_allow\_tcp\_ports](#input\_firewall\_allow\_tcp\_ports) | List of allowed ports to be reached from the internet. TAKE CARE! | `any` | n/a | yes |
+| <a name="input_instance_name"></a> [instance\_name](#input\_instance\_name) | Name for the compute instance | `string` | `"demo-instance"` | no |
+| <a name="input_machine_type"></a> [machine\_type](#input\_machine\_type) | Machine size for the instance | `any` | n/a | yes |
+| <a name="input_network_tags"></a> [network\_tags](#input\_network\_tags) | Network tag to be added. Optional. | `any` | n/a | yes |
+| <a name="input_project"></a> [project](#input\_project) | Default ProjectID | `any` | n/a | yes |
+| <a name="input_region"></a> [region](#input\_region) | Default region | `string` | `"us-east1"` | no |
+| <a name="input_startup_script"></a> [startup\_script](#input\_startup\_script) | Bootstrap script | `any` | n/a | yes |
+| <a name="input_tier"></a> [tier](#input\_tier) | Tier (size) of the instance | `any` | n/a | yes |
+| <a name="input_vpc_name"></a> [vpc\_name](#input\_vpc\_name) | Name of the VPC | `string` | `"my-custom-vpc"` | no |
+| <a name="input_zone"></a> [zone](#input\_zone) | Default zone | `string` | `"us-east1-c"` | no |
+
+## Outputs
+
+| Name | Description |
+|------|-------------|
+| <a name="output_cloud_sql_instance_connection_name"></a> [cloud\_sql\_instance\_connection\_name](#output\_cloud\_sql\_instance\_connection\_name) | Instance connection name |
+| <a name="output_cloud_sql_instance_name"></a> [cloud\_sql\_instance\_name](#output\_cloud\_sql\_instance\_name) | Instance name |
+| <a name="output_cloud_sql_instance_private_ip"></a> [cloud\_sql\_instance\_private\_ip](#output\_cloud\_sql\_instance\_private\_ip) | Instance private ip |
+| <a name="output_cloud_sql_instance_public_ip"></a> [cloud\_sql\_instance\_public\_ip](#output\_cloud\_sql\_instance\_public\_ip) | Instance public ip |
+| <a name="output_compute_instance_name"></a> [compute\_instance\_name](#output\_compute\_instance\_name) | Instance name |
+| <a name="output_compute_instance_private_ip"></a> [compute\_instance\_private\_ip](#output\_compute\_instance\_private\_ip) | Instance private ip |
+| <a name="output_compute_instance_public_ip"></a> [compute\_instance\_public\_ip](#output\_compute\_instance\_public\_ip) | Instance public ip |
+| <a name="output_compute_instance_ssh_command"></a> [compute\_instance\_ssh\_command](#output\_compute\_instance\_ssh\_command) | Instance ssh connect |
+| <a name="output_compute_instance_vpc"></a> [compute\_instance\_vpc](#output\_compute\_instance\_vpc) | Instance vpc |
+<!-- END_TF_DOCS -->
