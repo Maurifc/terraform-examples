@@ -96,8 +96,6 @@ Below are the key variables you should set:
 | `project`           | GCP Project ID                  | NA      |
 | `region`            | Default region for resources     | `us-east1`            |
 | `zone`              | Default zone for resources       | `us-east1-c`          |
-| `compute_instances` | Compute instances to create      | `{}`                  |
-| `cloud_sql_instances` | Cloud SQL instances to create   | `{}`                  |
 
 Example `tfvars-sample`:
 ```hcl
@@ -105,32 +103,32 @@ project = "my-project"
 region = us-east1
 zone = us-east1-c
 
-compute_instances = {
-  "gitlab" : {
-    instance_name = "gitlab-vm"
-    machine_type  = "e2-micro" # free tier suitable
-    disk_size_gb  = "20"
-    zone = "us-east1-c"
-    network_tags = ["gitlab"]
-    startup_script = "apt update && apt install -y nginx"
-    firewall_allow_tcp_ports = [
-      "80",
-      "443"
-    ]
-  }
-}
+#----------------------------------------------------------------------------
+# COMPUTE ENGINE
+#----------------------------------------------------------------------------
 
-cloud_sql_instances = {
-  "pg15" : {
-    name                     = "instance"
-    database_version         = "POSTGRES_15"
-    region                   = "us-central1"
-    tier                     = "db-f1-micro"
-    high_available           = false
-    enforce_complex_password = true
-    enable_private_network = false
-  }
-}
+instance_name  = "gitlab-vm"
+machine_type   = "e2-micro" # free tier suitable
+disk_size_gb   = "20"
+network_tags   = ["gitlab"]
+startup_script = "apt update && apt install -y nginx"
+firewall_allow_tcp_ports = [
+  "80",
+  "443"
+]
+
+#----------------------------------------------------------------------------
+# CLOUD SQL
+#----------------------------------------------------------------------------
+
+cloud_sql_instance_name  = "instance"
+database_version         = "POSTGRES_15"
+tier                     = "db-f1-micro"
+enable_private_network   = false
+enable_ha                = false
+enforce_complex_password = true
+
+project = "portal-ses"
 ```
 
 ### 3. Configure the GCP provider

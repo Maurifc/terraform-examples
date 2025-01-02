@@ -16,7 +16,7 @@ resource "google_compute_instance" "this" {
   tags = var.network_tags
 
   network_interface {
-    network = google_compute_network.vpc.self_link
+    network    = google_compute_network.vpc.self_link
     subnetwork = google_compute_network.vpc.name
 
     access_config {
@@ -45,7 +45,7 @@ resource "google_service_account" "instance_service_account" {
 # PUBLIC STATIC IPS
 #----------------------------------------------------------------------------
 resource "google_compute_address" "public_static_ip" {
-  name     = var.instance_name
+  name = var.instance_name
 }
 
 
@@ -63,7 +63,7 @@ resource "google_compute_firewall" "allow_iap_ssh" {
     ports    = ["22"]
   }
 
-  source_ranges              = ["35.235.240.0/20"]
+  source_ranges = ["35.235.240.0/20"]
 }
 
 resource "google_compute_firewall" "allow_tcp_ports" {
@@ -75,5 +75,5 @@ resource "google_compute_firewall" "allow_tcp_ports" {
     ports    = var.firewall_allow_tcp_ports
   }
 
-  source_ranges              = ["0.0.0.0/0"]
+  source_ranges = ["0.0.0.0/0"]
 }

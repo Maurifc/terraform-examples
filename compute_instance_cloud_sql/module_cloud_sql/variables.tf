@@ -16,17 +16,17 @@ variable "tier" {
 
 variable "enable_private_network" {
   description = "Whether to enable private network or not"
-  default = false
+  default     = false
 }
 
 variable "enable_ha" {
   description = "Enable high availability for the instance"
-  default = false
+  default     = false
 }
 
 variable "enforce_complex_password" {
-  description  = "Whether to enforce the complexity of the password"
-  default = false
+  description = "Whether to enforce the complexity of the password"
+  default     = false
 }
 
 #----------------------------------------------------------------------------

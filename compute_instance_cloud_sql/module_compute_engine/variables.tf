@@ -28,7 +28,7 @@ variable "startup_script" {
 #----------------------------------------------------------------------------
 variable "firewall_allow_tcp_ports" {
   description = "List of allowed ports to be reached from the internet. TAKE CARE!"
-  default = []
+  default     = []
 }
 
 variable "vpc_name" {
@@ -46,10 +46,10 @@ variable "project" {
 
 variable "region" {
   description = "Default region"
-  default = "us-east1"
+  default     = "us-east1"
 }
 
 variable "zone" {
   description = "Default zone"
-  default = "us-east1-c"
+  default     = "us-east1-c"
 }

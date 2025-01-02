@@ -3,7 +3,7 @@
 #----------------------------------------------------------------------------
 data "archive_file" "source_zip" {
   type        = "zip"
-  source_dir = var.source_dir
+  source_dir  = var.source_dir
   output_path = "/tmp/function-source-code.zip"
 
   excludes = [
@@ -15,8 +15,8 @@ data "archive_file" "source_zip" {
 
 # create a bucket to hold the functions' source codes
 resource "google_storage_bucket" "functions_source_code_bucket" {
-  name     = "functions-source-code-bucket-${local.bucket_name_suffix}"
-  location = "US"
+  name                        = "functions-source-code-bucket-${local.bucket_name_suffix}"
+  location                    = "US"
   uniform_bucket_level_access = true
 }
 
@@ -48,7 +48,7 @@ resource "google_cloudfunctions_function" "function" {
   }
 
   environment_variables = {
-    "source-md5": "${google_storage_bucket_object.source_code.md5hash}"    
+    "source-md5" : "${google_storage_bucket_object.source_code.md5hash}"
   }
 
   service_account_email = google_service_account.cloud_function_sa.email

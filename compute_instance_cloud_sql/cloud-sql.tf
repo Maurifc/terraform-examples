@@ -12,9 +12,9 @@ module "cloud_sql" {
   enforce_complex_password = var.enforce_complex_password
 
   authorized_networks = {
-    "all": "0.0.0.0/0"
+    "all" : "0.0.0.0/0"
   }
-  vpc                 = module.compute_engine_instance.vpc
+  vpc = module.compute_engine_instance.vpc
 
   project = var.project
   region  = var.region

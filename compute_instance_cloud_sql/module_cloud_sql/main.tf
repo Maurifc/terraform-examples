@@ -57,7 +57,7 @@ resource "google_sql_database_instance" "this" {
 #----------------------------------------------------------------------------
 
 resource "google_compute_global_address" "cloudsql_peering_ip" {
-  count = var.enable_private_network ? 1 : 0
+  count         = var.enable_private_network ? 1 : 0
   name          = "cloudsql-peering-ip"
   purpose       = "VPC_PEERING"
   address_type  = "INTERNAL"
